@@ -1,0 +1,11 @@
+{
+  "port": "8090",
+  "host": "http://localhost:8000",
+  "user": {
+    "name": "admin"
+  },
+  "database": {
+    "connection": "mongodb://127.0.0.1:27017/",
+    "name": "some"
+  }
+}
