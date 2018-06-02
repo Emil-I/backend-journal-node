@@ -10,12 +10,8 @@ module.exports = (app) => {
   MongoClient.connect(url, (err, client) => {
     if (err) return console.log(err);
 
-    db = client.db(dbName).collection('books');;
+    db = client.db(dbName);
 
     client.close();
-
-    app.listen(3003, () => {
-      console.log('API started');
-    });
   });
 }

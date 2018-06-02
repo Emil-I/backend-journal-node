@@ -1,6 +1,6 @@
 {
-  "port": "8090",
-  "host": "http://localhost:8000",
+  "port": "3003",
+  "host": "http://localhost:3003",
   "user": {
     "name": "admin"
   },

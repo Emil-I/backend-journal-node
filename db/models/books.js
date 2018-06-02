@@ -1,12 +1,9 @@
 'use strict';
 
-const db = require('../index');
-console.log(db);
+const db = require('../../db');
 
-exports.all = (collback) => {
-  // db.find().toArray((err, results) => {
-  //   if (err) return console.error(err);
-  //
-  //   res.send(results);
-  // });
+exports.all = (cb) => {
+  db.collection('books').find().toArray((err, results) => {
+    cb(err, results);
+  });
 }

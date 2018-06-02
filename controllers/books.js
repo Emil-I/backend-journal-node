@@ -6,7 +6,7 @@ const Books = require('../db/models/books');
  * @param req
  * @param res
  * @param next
- * @dir 
+ * @dir
  */
 
 exports.dir = (req, res, next) => {
@@ -18,6 +18,7 @@ exports.dir = (req, res, next) => {
  * @param req
  * @param res
  * @param next
+ * GET ALL BOOOKS
  */
 
 exports.all = (req, res, next) => {
@@ -27,7 +28,7 @@ exports.all = (req, res, next) => {
       return res.sendStatus(500);
     }
 
-    res.send(result);
+    // res.send(result);
   });
 
   next();
