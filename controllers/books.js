@@ -1,7 +1,4 @@
 'use strict';
-const Books = require('../db/models/books');
-
-
 /**
  * @param req
  * @param res
@@ -21,6 +18,8 @@ exports.dir = (req, res, next) => {
  * GET ALL BOOOKS
  */
 
+const Books = require('../db/models/books');
+
 exports.all = (req, res, next) => {
   Books.all((err, result) => {
     if (err) {
@@ -30,6 +29,4 @@ exports.all = (req, res, next) => {
 
     // res.send(result);
   });
-
-  next();
 }
