@@ -14,7 +14,13 @@ exports.connect = (url, next) => {
   MongoClient.connect(url, (err, client) => {
     if (err) return next(err);
 
-    state.db = client;
+    state.db = client.db('some');
+
+    // state.db.collection('books').find().toArray(function(err, result) {
+    //   if (err) throw console.log(err);
+    //   console.log(result);
+    //   client.close();
+    // });
 
     client.close();
   });

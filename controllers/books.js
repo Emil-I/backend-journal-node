@@ -26,7 +26,6 @@ exports.all = (req, res, next) => {
       console.log(err);
       return res.sendStatus(500);
     }
-
-    // res.send(result);
+    res.send(result);
   });
 }
