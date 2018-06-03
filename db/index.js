@@ -1,15 +1,23 @@
 'use strict';
-const MongoClient = require('mongodb').MongoClient;
-// const ObjectId = require('mongodb').ObjectId;
-const DB = require('./dbconnect');
+
+const mongoose = require('mongoose');
+
+let db;
 
 module.exports = (app) => {
 
-  let url = app.get('config').database.connection;
-  // let dbName = app.get('config').database.name;
-  // TODO Нжно как то пробросить название базы в connect
+  let configUrl = app.get('config').database.connection;
+  let nameDB = app.get('config').database.name;
+  let url = configUrl + nameDB;
 
-  DB.connect(url, (err, client) => {
-    if (err) return console.log(err);
+  mongoose.connect(url);
+
+  let db = mongoose.connection;
+
+  db.on('error', console.error.bind(console, 'connection error'));
+
+  db.once('open', () => {
+    console.log('db connection');
   });
+
 }

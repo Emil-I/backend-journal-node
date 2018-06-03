@@ -1,4 +1,8 @@
 'use strict';
+
+const models = require('../db/models');
+const Books = models.books;
+
 /**
  * @param req
  * @param res
@@ -6,26 +10,17 @@
  * @dir
  */
 
+
 exports.dir = (req, res, next) => {
-  let template = `<h1 style='width:100%;text-align:center;padding-top:100px;'>Hello server :)</h1>`;
-  res.send(template);
+  Books.dir((template) => {
+    res.send(template);
+  });
 }
 
-/**
- * @param req
- * @param res
- * @param next
- * GET ALL BOOOKS
- */
-
-const Books = require('../db/models/books');
-
 exports.all = (req, res, next) => {
-  Books.all((err, result) => {
-    if (err) {
-      console.log(err);
-      return res.sendStatus(500);
-    }
-    res.send(result);
+  Books.all((books) => {
+    console.log(books);
+    // req.send(books);
   });
+  // next();
 }
