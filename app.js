@@ -54,21 +54,21 @@ app.use(function(err, req, res, next) {
   res.sendStatus(500);
 });
 
-/// catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-//   let err = new Error('NOT FOUND');
-//   err.status = 404;
-//   next(err);
-// });
+// / catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  let err = new Error('NOT FOUND');
+  err.status = 404;
+  next(err);
+});
 
 
-/// error handlers
-// app.use((err, req, res, next) => {
-//   console.log(err);
-//   let template_404 = `<h1 style='width:100%;text-align:center;padding-top:100px;'>Not Found <br/> status 404</h1>`;
-//   res.send(template_404);
-//   res.sendStatus(404);
-// });
+// / error handlers
+app.use((err, req, res, next) => {
+  console.log(err);
+  let template_404 = `<h1 style='width:100%;text-align:center;padding-top:100px;'>Not Found <br/> status 404</h1>`;
+  res.send(template_404);
+  res.sendStatus(404);
+});
 
 
 module.exports = app;
