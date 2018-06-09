@@ -2,8 +2,6 @@
 
 const mongoose = require('mongoose');
 
-let db;
-
 module.exports = (app) => {
 
   let configUrl = app.get('config').database.connection;

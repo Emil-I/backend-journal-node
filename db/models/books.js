@@ -1,16 +1,17 @@
 'use strict';
 
 const mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
 /**
- * @ mongoose.Schema
- * @param callback
+ * @return Books
  */
-exports.getAllBooks = (callback) => {
-  let allBooksScheme = mongoose.Schema({
+exports.getAllBooks = () => {
+  let allBooksSchema = new Schema({
     name: String
   });
 
-  let Books = mongoose.model('Books', allBooksScheme);
-  callback(Books);
+  let Books = mongoose.model('Books', allBooksSchema);
+
+  return Books;
 }

@@ -9,15 +9,11 @@ const Books = models.books;
  * @param next
  */
 exports.all = (req, res, next) => {
-  Books.getAllBooks((books) => {
-
-    books.find(function(err, books) {
-      if (err) {
-        console.error(err);
-        next();
-      }
-      res.send(books);
-    });
-
+  Books.getAllBooks().find(function(err, books) {
+    if (err) {
+      console.error(err);
+      next();
+    }
+    res.send(books);
   });
 }
