@@ -66,8 +66,9 @@ app.use(function(req, res, next) {
 app.use((err, req, res, next) => {
   console.log(err);
   let template_404 = `<h1 style='width:100%;text-align:center;padding-top:100px;'>Not Found <br/> status 404</h1>`;
-  res.send(template_404);
-  res.sendStatus(404);
+  res
+    .send(template_404)
+    .sendStatus(404);
 });
 
 

@@ -8,6 +8,7 @@ const UserModel = models.user;
  *@param req
  *@param res
  *@param next
+ *@method POST
  */
 
 exports.create = (req, res, next) => {
@@ -19,20 +20,18 @@ exports.create = (req, res, next) => {
     role: req.body.role
   }
 
-  let userCreate = UserModel.create();
+  const User = UserModel.User;
 
-  let User = new userCreate(userData);
+  let user = new User(userData);
 
-  User.save((err) => {
+  user.save((err) => {
     if (err) {
-      res.sendStatus(500);
       console.log(err);
+      // res.sendStatus(500);
       next(err);
     }
 
-    res.send(User);
-    // res.sendStatus(200);
-    // TODO try res.json(User);
+    res.send(user);
   });
 }
 
@@ -40,15 +39,15 @@ exports.create = (req, res, next) => {
  *@param req
  *@param res
  *@param next
+ *@method GET
  */
-
 exports.getAll = (req, res, next) => {
-  UserModel.getAll().find({}, (err, users) => {
+  UserModel.User.find({}, (err, users) => {
     if (err) {
-      console.error(err);
-      next(err);
+      console.log(err);
+      // res.sendStatus(500);
+      return next(err);
     }
-    // BUG при втором запросе получаю 500-ю
     res.send(users);
   });
 }
