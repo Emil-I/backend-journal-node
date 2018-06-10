@@ -25,7 +25,6 @@ exports.create = (req, res, next) => {
   user.save((err) => {
     if (err) {
       console.log(err);
-      // res.sendStatus(500);
       next(err);
     }
 
@@ -39,6 +38,7 @@ exports.create = (req, res, next) => {
  *@param next
  *@method GET (get all users)
  */
+
 exports.getAll = (req, res, next) => {
   User
     .find({})
@@ -50,14 +50,6 @@ exports.getAll = (req, res, next) => {
       res.send(users);
     });
 }
-// TODO ПРИМЕР ПРОМИСОВ ДЛЯ ПОИСКА
-// exports.getAll = (req, res, next) => {
-//   User
-//     .findOne({name: 'UPDATEnAME'})
-//     .then((users) => {
-//       res.send(users);
-//     });
-// }
 
 /**
  *@param req
@@ -67,13 +59,16 @@ exports.getAll = (req, res, next) => {
  *@method UPDATE (update user)
  */
 
-exports.update = (req, res, next) => {
-  User.findById(req.params.id, (err, user) => {
-    user.set({
-      name: "UPDATEnAME"
+exports.update = async (req, res, next) => {
+  try {
+
+    let query = await User.findById(req.params.id);
+
+    query.set({
+      name: "async"
     });
 
-    user.save((err, updateUser) => {
+    query.save((err, updateUser) => {
       if (err) {
         console.log(err);
         return next(err);
@@ -81,5 +76,9 @@ exports.update = (req, res, next) => {
       res.send(updateUser);
     });
 
-  })
+  } catch (err) {
+    console.log(err.message);
+    console.log('Error name: ' + err.name);
+    res.sendStatus(404);
+  }
 }
