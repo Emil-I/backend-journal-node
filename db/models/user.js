@@ -10,14 +10,24 @@ let Schema = mongoose.Schema;
 
 let userSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  name: String,
-  email: String,
-  password: String,
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
   role: String,
   created: {
     type: Date,
     default: Date.now
   }
+  // , {versionKey: false} Для отключения ключа ерсий
 });
 
 let User = mongoose.model('Users', userSchema);

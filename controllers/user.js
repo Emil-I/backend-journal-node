@@ -40,16 +40,24 @@ exports.create = (req, res, next) => {
  *@method GET (get all users)
  */
 exports.getAll = (req, res, next) => {
-  User.find({}, (err, users) => {
-    if (err) {
-      console.log(err);
-      // res.sendStatus(500);
-      return next(err);
-    }
-    res.send(users);
-  });
+  User
+    .find({})
+    .exec((err, users) => {
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
+      res.send(users);
+    });
 }
-
+// TODO ПРИМЕР ПРОМИСОВ ДЛЯ ПОИСКА
+// exports.getAll = (req, res, next) => {
+//   User
+//     .findOne({name: 'UPDATEnAME'})
+//     .then((users) => {
+//       res.send(users);
+//     });
+// }
 
 /**
  *@param req
