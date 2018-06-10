@@ -2,13 +2,13 @@
 
 const mongoose = require('mongoose');
 const models = require('../db/models');
-const UserModel = models.user;
+const User = models.user.User;
 
 /**
  *@param req
  *@param res
  *@param next
- *@method POST
+ *@method POST (create new User)
  */
 
 exports.create = (req, res, next) => {
@@ -19,8 +19,6 @@ exports.create = (req, res, next) => {
     password: req.body.password,
     role: req.body.role
   }
-
-  const User = UserModel.User;
 
   let user = new User(userData);
 
@@ -39,10 +37,10 @@ exports.create = (req, res, next) => {
  *@param req
  *@param res
  *@param next
- *@method GET
+ *@method GET (get all users)
  */
 exports.getAll = (req, res, next) => {
-  UserModel.User.find({}, (err, users) => {
+  User.find({}, (err, users) => {
     if (err) {
       console.log(err);
       // res.sendStatus(500);
@@ -50,4 +48,30 @@ exports.getAll = (req, res, next) => {
     }
     res.send(users);
   });
+}
+
+
+/**
+ *@param req
+ *@param res
+ *@param next
+ *@param user:id
+ *@method UPDATE (update user)
+ */
+
+exports.update = (req, res, next) => {
+  User.findById(req.params.id, (err, user) => {
+    user.set({
+      name: "UPDATEnAME"
+    });
+
+    user.save((err, updateUser) => {
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
+      res.send(updateUser);
+    });
+
+  })
 }
