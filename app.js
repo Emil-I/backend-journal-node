@@ -6,8 +6,7 @@ const express = require('express');
 const session = require('express-session');
 
 
-// let configPath = path.join(__dirname, 'config', process.env.NODE_ENV + '.json');
-let configPath = path.join(__dirname, `/config/config.json`);
+let configPath = path.join(__dirname, `/config/${process.env.NODE_ENV}.json`);
 
 
 const config = require(configPath);
@@ -48,11 +47,11 @@ fs.readdirSync(routesDirectory).filter(function(file) {
   require(path.join(routesDirectory, file))(app);
 });
 
-
-app.use(function(err, req, res, next) {
-  if (res.headersSent) return next(err);
-  res.sendStatus(500);
-});
+//
+// app.use(function(err, req, res, next) {
+//   if (res.headersSent) return next(err);
+//   res.sendStatus(500);
+// });
 
 // / catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -65,10 +64,18 @@ app.use(function(req, res, next) {
 // / error handlers
 app.use((err, req, res, next) => {
   console.log(err);
-  let template_404 = `<h1 style='width:100%;text-align:center;padding-top:100px;'>Not Found <br/> status 404</h1>`;
-  res
-    .send(template_404)
-    .sendStatus(404);
+
+  if (err.code) {
+    err.status = err.code;
+  }
+
+  if (err.name === 'ValidationError') {
+    res.sendStatus(500);
+  } else if (err.status === 404) {
+    let template_404 = `<h1 style='width:100%;text-align:center;padding-top:100px;'>Not Found <br/> status 404</h1>`;
+    res.send(template_404);
+    return;
+  }
 });
 
 

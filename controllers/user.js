@@ -1,5 +1,6 @@
 'use strict';
 
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const models = require('../db/models');
 const User = models.user.User;
@@ -11,25 +12,49 @@ const User = models.user.User;
  *@method POST (create new User)
  */
 
-exports.create = (req, res, next) => {
-  let userData = {
-    _id: new mongoose.Types.ObjectId,
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    role: req.body.role
-  }
+exports.create = async (req, res, next) => {
+  try {
+    const id = new mongoose.Types.ObjectId;
+    const {
+      name,
+      email,
+      password,
+      role
+    } = req.body;
 
-  let user = new User(userData);
+    let user = await User.findOne({
+      email: email
+    });
 
-  user.save((err) => {
-    if (err) {
-      console.log(err);
-      next(err);
+    if (user) {
+      res.sendStatus(400);
+      return console.log('User is already registered');
     }
 
-    res.send(user);
-  });
+    const saltRounds = 10;
+    const HASH = await bcrypt.hash(password, saltRounds);
+    const SALT = await bcrypt.genSalt(saltRounds);
+
+    let userData = {
+      _id: id,
+      name: name,
+      email: email,
+      password: {
+        hash: HASH,
+        salt: SALT
+      },
+      role: role
+    }
+
+    user = await User.create(userData);
+
+    return res.send(user);
+
+  } catch (err) {
+    return console.log(err);
+    // next(err);
+  }
+
 }
 
 /**
@@ -44,7 +69,6 @@ exports.getAll = (req, res, next) => {
     .find({})
     .exec((err, users) => {
       if (err) {
-        console.log(err);
         return next(err);
       }
       res.send(users);
@@ -60,25 +84,23 @@ exports.getAll = (req, res, next) => {
  */
 
 exports.update = async (req, res, next) => {
+  console.log(req.query.name);
   try {
 
     let query = await User.findById(req.params.id);
 
     query.set({
-      name: "async"
+      name: req.query.name || 'unknown'
     });
 
     query.save((err, updateUser) => {
       if (err) {
-        console.log(err);
-        return next(err);
+        next(err);
       }
       res.send(updateUser);
     });
 
   } catch (err) {
-    console.log(err.message);
-    console.log('Error name: ' + err.name);
-    res.sendStatus(404);
+    next(err);
   }
 }
