@@ -7,5 +7,6 @@
   "database": {
     "connection": "mongodb://127.0.0.1:27017/",
     "name": "fortest"
-  }
+  },
+  "SECRET_KAY": "the_xx_test"
 }
