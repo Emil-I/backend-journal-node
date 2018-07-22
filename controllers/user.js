@@ -36,22 +36,41 @@ exports.registration = async (req, res, next) => {
       email: email
     });
 
+    if (!password) {
+      return res.status(500).send('Password required');
+    }
+
     if (user) {
-      res.sendStatus(400);
+      res.status(400).send(`User is already registered`);
       return console.log(`User ${email} is already registered`);
     }
 
     const saltRounds = 10;
-    const HASH = await bcrypt.hash(password, saltRounds);
     const SALT = await bcrypt.genSalt(saltRounds);
+
+    const HASH = await bcrypt.hash(password, SALT);
+
+    // generate a salt
+    // bcrypt.genSalt(saltRounds, function (err, salt) {
+    //   if (err) return next(err);
+
+    //   // hash the password using our new salt
+    //   bcrypt.hash(password, salt, function (err, hash) {
+    //     if (err) return next(err);
+
+    //     // override the cleartext password with the hashed one
+    //     user.password = hash;
+    //     next();
+    //   });
+    // });
 
     let userData = {
       _id: id,
       name: name,
       email: email,
       password: {
-        hash: HASH,
-        salt: SALT
+        hash: HASH
+        // salt: SALT
       },
       role: role
     }
@@ -61,8 +80,8 @@ exports.registration = async (req, res, next) => {
     return res.send(user);
 
   } catch (err) {
-    return console.log(err);
-    // next(err);
+    // return console.log(err);
+    next(err);
   }
 
 }
@@ -89,14 +108,14 @@ exports.login = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.send('User not found!');
+      return res.status(404).send('User not found!');
     }
 
     // CHECK PASSWORD
     let checkPass = await bcrypt.compare(password, user.password.hash);
 
     if (!checkPass) {
-      return res.send('Password don\'t match!');
+      return res.status(500).send('Password don\'t match!');
     }
 
     // CREATE TOKEN
@@ -107,7 +126,8 @@ exports.login = async (req, res, next) => {
     res.send(token);
 
   } catch (err) {
-    return console.log(err);
+    // return console.log(err);
+    next(err);
   }
 }
 
@@ -124,17 +144,17 @@ exports.me = async (req, res, next) => {
     const {
       authorization: headerValue
     } = req.headers;
-
-    if (_.isNull(headerValue) || _.isUndefined(headerValue) || _.isEmpty(headerValue)) {
+    
+    console.log(headerValue);
+      if (_.isNull(headerValue) || _.isUndefined(headerValue) || _.isEmpty(headerValue)) {
       return res.sendStatus(400);
     }
 
-    // const [, jwtToken] = headerValue.split(' ');
-    // console.log(headerValue);
+    const [, jwtToken] = headerValue.split(' ');
 
     const {
       id
-    } = await jwtVerifyPromise(headerValue);
+    } = await jwtVerifyPromise(jwtToken);
 
     let user = await User.findOne({
       _id: id
@@ -149,7 +169,8 @@ exports.me = async (req, res, next) => {
     return res.send(user);
 
   } catch (err) {
-    return console.log(err);
+    // return console.log(err);
+    next(err);
   }
 
 }
@@ -168,6 +189,7 @@ exports.getAll = async (req, res, next) => {
     let users = await User.find({}, {
       password: false
     });
+    // let users = await User.find({});
 
     if (users) {
       return res.send(users);
